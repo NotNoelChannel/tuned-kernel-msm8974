@@ -16,6 +16,12 @@
 #include <linux/bitops.h>
 
 /*
+ * deal with unrepresentable constant logarithms
+ */
+extern __attribute__((const))
+int ____ilog2_NaN(void);
+
+/*
  * non-constant log of base 2 calculators
  * - the arch may override these in asm/bitops.h if they can be implemented
  *   more efficiently than using fls() and fls64()
