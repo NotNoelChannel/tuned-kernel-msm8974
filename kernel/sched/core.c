@@ -1451,6 +1451,9 @@ int select_task_rq(struct task_struct *p, int sd_flags, int wake_flags)
 		cpu = select_fallback_rq(task_cpu(p), p);
 
 	return cpu;
+	
+	if (!p->on_cpu)
+		return p->se.sum_exec_runtime;
 }
 
 static void update_avg(u64 *avg, u64 sample)
