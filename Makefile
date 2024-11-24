@@ -393,7 +393,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
-KBUILD_AFLAGS   := -D__ASSEMBLY__
+KBUILD_AFLAGS   := -D__ASSEMBLY__ -O3
 KBUILD_AFLAGS_MODULE  := -DMODULE
 KBUILD_CFLAGS_MODULE  := -DMODULE -fno-pic
 KBUILD_LDFLAGS_MODULE := -T $(srctree)/scripts/module-common.lds
@@ -583,10 +583,6 @@ endif # $(dot-config)
 # Defaults to vmlinux, but the arch makefile usually adds further targets
 all: vmlinux
 
-ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-KBUILD_CFLAGS	+= $(call cc-option,-Oz,-Os)
-KBUILD_CFLAGS	+= $(call cc-disable-warning,maybe-uninitialized,)
-else
 EXTRA		:= -falign-functions -falign-jumps -falign-labels -falign-loops \
 		-fmodulo-sched -fmodulo-sched-allow-regmoves -fsingle-precision-constant \
                 -fgcse-sm -fgcse-las -fipa-pta -ftree-lrs -fgcse-after-reload -fpeel-loops -fpredictive-commoning \
@@ -597,7 +593,6 @@ EXTRA		:= -falign-functions -falign-jumps -falign-labels -falign-loops \
                 --param=max-modulo-backtrack-attempts=500000 --param=max-hoist-depth=0 --param=max-pending-list-length=10000 \
                 --param=max-delay-slot-live-search=10000 --param=max-delay-slot-insn-search=10000 --param=inline-min-speedup=25
 KBUILD_CFLAGS	+= -Os -ffast-math -funroll-loops $(EXTRA)
-endif
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
 
