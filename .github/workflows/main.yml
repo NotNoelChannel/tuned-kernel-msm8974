@@ -1,0 +1,56 @@
+name: Kernel CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout Kernel Source
+      uses: actions/checkout@v3
+
+    - name: Setup Environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y lib32z1 ccache autoconf git zip
+        git clone --depth 1 --branch android-6.0.1_r11 --single-branch https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8 /opt/toolchains/arm-eabi-4.8/
+
+    - name: Configure Build Parameters
+      run: |
+        export ARCH=arm
+        export CROSS_COMPILE=/opt/toolchains/arm-eabi-4.8/bin/arm-eabi-
+        export KBUILD_BUILD_USER=kernelci
+        export KBUILD_BUILD_HOST=github-actions
+        export DEFCONFIG=lineage_klte_pn547_defconfig
+        export OUTPUT_DIR=/home/runner/work/output
+        mkdir -p $OUTPUT_DIR
+
+    - name: Build Kernel
+      run: |
+        make -j$(nproc --ignore=1) O=out $DEFCONFIG
+        make -j$(nproc --ignore=1) O=out CFLAGS_KERNEL="-Wno-maybe-uninitialized -Wno-array-bounds" CFLAGS_MODULE="-Wno-maybe-uninitialized -Wno-array-bounds"
+        cp out/arch/arm/boot/zImage $OUTPUT_DIR/
+
+    - name: Compile DTB
+      if: always()
+      run: |
+        chmod +x tools_boeffla/dtbToolCM
+        tools_boeffla/dtbToolCM -2 -o out/arch/arm/boot/dt.img -s 2048 -p out/scripts/dtc/ out/arch/arm/boot/
+        cp out/arch/arm/boot/dt.img $OUTPUT_DIR/
+
+    - name: Prepare AnyKernel Zip
+      run: |
+        cp out/arch/arm/boot/zImage anykernel_boeffla/zImage
+        cp out/arch/arm/boot/dt.img anykernel_boeffla/dt
+        cd anykernel_boeffla
+        zip -r9 ../dist/tuned-kernel-$(date +"%Y%m%d%H%M").zip *
+        cp ../dist/*.zip $OUTPUT_DIR/
+        cp -r ../anykernel_boeffla $OUTPUT_DIR/anykernel_boeffla
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: Kernel-Build-Output
+        path: /home/runner/work/output/*.zip
