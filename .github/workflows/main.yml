@@ -15,12 +15,13 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y lib32z1 ccache autoconf git zip
-        git clone --depth 1 --branch android-6.0.1_r11 --single-branch https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8 /opt/toolchains/arm-eabi-4.8/
-
+        wget https://toolchains.bootlin.com/downloads/releases/toolchains/armv7-eabihf/tarballs/armv7-eabihf--glibc--bleeding-edge-2021.11-1.tar.bz2 \
+        && sudo mkdir -p /opt/toolchains \
+        && sudo tar -xjf armv7-eabihf--glibc--bleeding-edge-2021.11-1.tar.bz2 -C /opt/toolchains \
+        && rm armv7-eabihf--glibc--bleeding-edge-2021.11-1.tar.bz2
     - name: Configure Build Parameters
       run: |
         export ARCH=arm
-        export CROSS_COMPILE=/opt/toolchains/arm-eabi-4.8/bin/arm-eabi-
         bash bbuild-anykernel.sh klte
     - name: Uploading Kernel 
       run: |
