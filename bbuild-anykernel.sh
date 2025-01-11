@@ -11,7 +11,7 @@
 #######################################
 #we use a gcc toolchain for armv7 (32bit) targets.
 
-TOOLCHAIN="/opt/toolchains/arm-eabi-4.8/bin/arm-eabi-"
+TOOLCHAIN="/opt/toolchains/armv7-eabihf--glibc--bleeding-edge-2021.11-1/bin/arm-buildroot-linux-gnueabihf-"
 
 #######################################
 #do not change anything below this if you dont know what youre doing
