@@ -585,7 +585,7 @@ all: vmlinux
 EXTRA		:= -falign-functions -falign-jumps -falign-labels -falign-loops \
 		-fmodulo-sched -fmodulo-sched-allow-regmoves -fsingle-precision-constant \
                 -fgcse-sm -fgcse-las -fipa-pta -ftree-lrs -fgcse-after-reload -fpeel-loops -fpredictive-commoning \
-                -freorder-blocks-algorithm=stc -fira-loop-pressure -fsplit-loops -funswitch-loops \
+                -fira-loop-pressure -funswitch-loops \
                 --param=max-tail-merge-comparisons=20000 --param=max-gcse-memory=2147483647 \
                 --param=max-tail-merge-iterations=20000 --param=max-cse-path-length=40000 --param=max-vartrack-size=0 \
                 --param=max-cse-insns=40000 --param=max-cselib-memory-locations=500000 --param=max-reload-search-insns=500000 \
