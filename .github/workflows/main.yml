@@ -30,8 +30,7 @@ jobs:
     - name: Build Kernel
       run: |
         make -j$(nproc --ignore=1) O=out $DEFCONFIG
-        make syncconfig
-        make -j$(nproc --ignore=1) O=out CFLAGS_KERNEL="-Wno-maybe-uninitialized -Wno-array-bounds" CFLAGS_MODULE="-Wno-maybe-uninitialized -Wno-array-bounds"
+        make -j$(nproc --ignore=1) O=out CFLAGS_KERNEL="-Wno-maybe-uninitialized -Wno-array-bounds" CFLAGS_MODULE="-Wno-maybe-uninitialized -Wno-array-bounds" ARCH=arm oldconfig
         cp out/arch/arm/boot/zImage $OUTPUT_DIR/
 
     - name: Compile DTB
