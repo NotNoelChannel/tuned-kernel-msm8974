@@ -21,35 +21,18 @@ jobs:
       run: |
         export ARCH=arm
         export CROSS_COMPILE=/opt/toolchains/arm-eabi-4.8/bin/arm-eabi-
-        export KBUILD_BUILD_USER=kernelci
-        export KBUILD_BUILD_HOST=github-actions
-        export DEFCONFIG=lineage_klte_pn547_defconfig
-        export OUTPUT_DIR=/home/runner/work/output
-        mkdir -p $OUTPUT_DIR
-    - name: Build Kernel
+        bash bbuild-anykernel.sh klte
+    - name: Uploading Kernel 
       run: |
-        make -j$(nproc --ignore=1) O=out $DEFCONFIG
-        make -j$(nproc --ignore=1) O=out CONFIG_DEBUG_SECTION_MISMATCH=y CFLAGS_KERNEL="-Wno-maybe-uninitialized -Wno-array-bounds" CFLAGS_MODULE="-Wno-maybe-uninitialized -Wno-array-bounds" ARCH=arm oldconfig
-        cp out/arch/arm/boot/zImage $OUTPUT_DIR/
-
-    - name: Compile DTB
-      if: always()
-      run: |
-        chmod +x tools_boeffla/dtbToolCM
-        tools_boeffla/dtbToolCM -2 -o out/arch/arm/boot/dt.img -s 2048 -p out/scripts/dtc/ out/arch/arm/boot/
-        cp out/arch/arm/boot/dt.img $OUTPUT_DIR/
-
-    - name: Prepare AnyKernel Zip
-      run: |
-        cp out/arch/arm/boot/zImage anykernel_boeffla/zImage
-        cp out/arch/arm/boot/dt.img anykernel_boeffla/dt
-        cd anykernel_boeffla
-        zip -r9 ../dist/tuned-kernel-$(date +"%Y%m%d%H%M").zip *
-        cp ../dist/*.zip $OUTPUT_DIR/
-        cp -r ../anykernel_boeffla $OUTPUT_DIR/anykernel_boeffla
-
+        cp out/arch/arm/boot/zImage /home/runner/work/output/
+        cp out/arch/arm/boot/dt.img /home/runner/work/output/
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: Kernel-Build-Output
-        path: /home/runner/work/output/*.zip
+        name: zImage
+        path: /home/runner/work/output/zImage
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dtb
+        path: /home/runner/work/output/dt.img
