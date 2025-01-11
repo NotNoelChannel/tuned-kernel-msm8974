@@ -26,12 +26,10 @@ jobs:
         export DEFCONFIG=lineage_klte_pn547_defconfig
         export OUTPUT_DIR=/home/runner/work/output
         mkdir -p $OUTPUT_DIR
-
     - name: Build Kernel
       run: |
-        make -j$(nproc --ignore=1) O=out $DEFCONFIG oldconfig
-        make mrproper
-        make -j$(nproc --ignore=1) O=out CFLAGS_KERNEL="-Wno-maybe-uninitialized -Wno-array-bounds" CFLAGS_MODULE="-Wno-maybe-uninitialized -Wno-array-bounds" ARCH=arm oldconfig
+        make -j$(nproc --ignore=1) O=out $DEFCONFIG
+        make -j$(nproc --ignore=1) O=out CONFIG_DEBUG_SECTION_MISMATCH=y CFLAGS_KERNEL="-Wno-maybe-uninitialized -Wno-array-bounds" CFLAGS_MODULE="-Wno-maybe-uninitialized -Wno-array-bounds" ARCH=arm oldconfig
         cp out/arch/arm/boot/zImage $OUTPUT_DIR/
 
     - name: Compile DTB
