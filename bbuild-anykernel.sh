@@ -11,7 +11,7 @@
 #######################################
 #we use a gcc toolchain for armv7 (32bit) targets.
 
-TOOLCHAIN="/root/armv7-eabihf--glibc--bleeding-edge-2022.08-1/bin/arm-buildroot-linux-gnueabihf-"
+TOOLCHAIN="/opt/toolchains/arm-eabi-4.8/bin/arm-eabi-"
 
 #######################################
 #do not change anything below this if you dont know what youre doing
@@ -29,7 +29,7 @@ MODULES_IN_SYSTEM="y"
 
 DEFCONFIG="lineage_klte_pn547_defconfig"
 
-KERNEL_NAME="Boeffla-Kernel"
+KERNEL_NAME="notnoelchannel"
 
 NUM_CPUS=""   # number of cpu cores used for build (leave empty for auto detection)
 
