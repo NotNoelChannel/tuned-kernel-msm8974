@@ -14,7 +14,7 @@ jobs:
     - name: Setup Environment
       run: |
         sudo apt-get update
-        sudo apt-get install -y lib32z1 ccache autoconf git zip
+        sudo apt-get install -y lib32z1 ccache autoconf git zip libyaml-dev
         wget https://toolchains.bootlin.com/downloads/releases/toolchains/armv7-eabihf/tarballs/armv7-eabihf--glibc--bleeding-edge-2021.11-1.tar.bz2 \
         && sudo mkdir -p /opt/toolchains \
         && sudo tar -xjf armv7-eabihf--glibc--bleeding-edge-2021.11-1.tar.bz2 -C /opt/toolchains \
