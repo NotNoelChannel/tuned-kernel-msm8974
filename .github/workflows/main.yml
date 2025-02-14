@@ -22,6 +22,7 @@ jobs:
     - name: Configure Build Parameters
       run: |
         export ARCH=arm
+        export NO_YAML=1
         bash bbuild-anykernel.sh klte
     - name: Uploading Kernel 
       run: |
